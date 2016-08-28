@@ -18,6 +18,9 @@
     <!-- Controllers -->
     <bean id="cipherController" class="businessLogic.controllers.CipherController" autowire="byName" scope="singleton"/>
 
+    <!-- Services -->
+    <bean id="turningGrilleService" class="businessLogic.services.TurningGrilleService" autowire="byName" scope="singleton"/>
+
     <!-- Message JSON converters -->
     <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="defaultContentType" ref="jsonMediaType"/>
