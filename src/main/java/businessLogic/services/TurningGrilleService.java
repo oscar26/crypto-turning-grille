@@ -9,10 +9,18 @@ import java.util.stream.IntStream;
  */
 public class TurningGrilleService {
 
-    public static int[] decrypt(HashMap<String, int[]> cipherAndKey) {
-        int[] cipher = cipherAndKey.get("cipher");
-        int[] key = cipherAndKey.get("key");
-        char direction = (char) cipherAndKey.get("direction")[0];
+    // Constants for the map
+    public static final int CIPHER = 0;
+    public static final int KEY = 1;
+    public static final int DIRECTION = 2;
+    public static final int MASK1 = 3;
+    public static final int MASK2 = 3;
+    public static final int MASK3 = 3;
+
+    public static int[] decrypt(HashMap<Integer, int[]> cipherAndKey) {
+        int[] cipher = cipherAndKey.get(CIPHER);
+        int[] key = cipherAndKey.get(KEY);
+        char direction = (char) cipherAndKey.get(DIRECTION)[0];
         int[] message = new int[cipher.length];
         int n = (int) Math.sqrt(cipher.length);
         List<int[]> masks = retrieveMasks(key, direction, n);
@@ -24,7 +32,7 @@ public class TurningGrilleService {
         return message;
     }
 
-    public static HashMap<String, int[]> encrypt(int[] message, char direction) {
+    public static HashMap<Integer, int[]> encrypt(int[] message, char direction) {
         int n = (int) Math.sqrt(message.length);
         int[] cipherMessage = new int[message.length];
         List<int[]> masks = generateMasks(n, direction);
@@ -33,10 +41,13 @@ public class TurningGrilleService {
             int cipherIdx = masks.get((int) Math.floor(i / n))[i % n];
             cipherMessage[cipherIdx] = message[i];
         }
-        HashMap<String, int[]> cipherAndKey = new HashMap<>();
-        cipherAndKey.put("cipher", cipherMessage);
-        cipherAndKey.put("key", masks.get(0));
-        cipherAndKey.put("direction", new int[] {direction});
+        HashMap<Integer, int[]> cipherAndKey = new HashMap<>();
+        cipherAndKey.put(CIPHER, cipherMessage);
+        cipherAndKey.put(KEY, masks.get(0));
+        cipherAndKey.put(DIRECTION, new int[] {direction});
+        cipherAndKey.put(MASK1, masks.get(1));
+        cipherAndKey.put(MASK2, masks.get(2));
+        cipherAndKey.put(MASK3, masks.get(3));
         return cipherAndKey;
     }
 
@@ -142,9 +153,9 @@ public class TurningGrilleService {
         //printMasks(masks);
 
         System.out.println("\n");
-        HashMap<String, int[]> cipherAndKey = encrypt(originalArray, 'r');
-        System.out.println(Arrays.toString(cipherAndKey.get("cipher")));
-        System.out.println(Arrays.toString(cipherAndKey.get("key")));
+        HashMap<Integer, int[]> cipherAndKey = encrypt(originalArray, 'r');
+        System.out.println(Arrays.toString(cipherAndKey.get(CIPHER)));
+        System.out.println(Arrays.toString(cipherAndKey.get(KEY)));
 
         int[] message = decrypt(cipherAndKey);
         System.out.println("\n");
